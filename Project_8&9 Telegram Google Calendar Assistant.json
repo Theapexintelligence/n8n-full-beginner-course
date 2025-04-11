@@ -1,0 +1,595 @@
+{
+  "name": "Telegram Google Calendar Assistant",
+  "nodes": [
+    {
+      "parameters": {
+        "model": "o3-mini",
+        "options": {}
+      },
+      "id": "ed2666e3-a2ba-4806-b347-d70ad58508c7",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        1740,
+        780
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "openAiApi": {
+          "id": "marROkDq8FtIIcmK",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "updates": [
+          "*"
+        ],
+        "additionalFields": {}
+      },
+      "id": "6de114df-e2d6-424a-89bb-f08dc9803c65",
+      "name": "Listen for incoming events",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "position": [
+        960,
+        400
+      ],
+      "webhookId": "3b7ec16b-f8d0-4aeb-b5b8-aa2044ce9da8",
+      "typeVersion": 1,
+      "credentials": {
+        "telegramApi": {
+          "id": "4ml5GHmSBn0oCcI2",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text }}",
+        "options": {
+          "systemMessage": "=You are a helpful assistant.\n\nToday's date is {{ $now }}.\n\nGuidelines:\n- When fetching emails, filter out any promotional emails. \n- When summarizing emails, include Sender, Message date, subject, and brief summary of email.\n- if the user did not specify a date in the request assume they are asking for today\n- When answering questions about calendar events, filter out events that don't apply to the question.  For example, the question is about events for today, only reply with events for today.\n\n\n- if you are creating an event in calendar, for the start and end date parameters, make sure:\n  - check to make sure there is nothing conflicting, if there is make sure to not create an event, but send back ONLY the event that is conflicting and any around it for that day ONLY.  Don't create an event if there is a conflict.  It doesn't matter what date you need to check, do that.\n  - Determine and extract the start date and time for the event. Date must be in the format yyyy-MM-dd and time in the format of hh:mm:ss. If no start time is indicated, the start time is 9am. If you are unable to do so, just leave it blank.\n- Note, Assume all dates are within the current year which is {{ $now.format(\"yyyy\") }} unless stated otherwise.\n - if updating an event, if the user doesn't give the exact title of the event, that's okay just reply with the event that is closest to what they are asking\n\n\nGuidelines for Drafting Emails:\nIt will be in HTML format.  Make it professional, and concise.  Use bullet points for anything such as calendar events, who's invited, key points, actions items, etc.  It will be from Tyler."
+        }
+      },
+      "id": "084d6e02-ea8f-43e1-bbe4-aed7c9fe2a39",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        2080,
+        400
+      ],
+      "typeVersion": 1.7
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $('Listen for incoming events').item.json.message.voice.file_id }}"
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1520,
+        320
+      ],
+      "id": "ef7cbeb9-2a50-4534-beed-a24ca65d9f1b",
+      "name": "Telegram",
+      "webhookId": "35d5ea2a-c417-4dcb-8abd-a3432b6c8052",
+      "credentials": {
+        "telegramApi": {
+          "id": "4ml5GHmSBn0oCcI2",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "binaryPropertyName": "=data",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.7,
+      "position": [
+        1740,
+        320
+      ],
+      "id": "9aaafdd3-c316-4701-bd1f-b6e6e8407b52",
+      "name": "OpenAI",
+      "alwaysOutputData": true,
+      "credentials": {
+        "openAiApi": {
+          "id": "marROkDq8FtIIcmK",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "tylerreedytlearning@gmail.com",
+          "mode": "list",
+          "cachedResultName": "tylerreedytlearning@gmail.com"
+        },
+        "start": "={{ $fromAI('start_date') }}",
+        "end": "={{ $fromAI('end_date') }}",
+        "additionalFields": {
+          "description": "={{ $fromAI('description_of_event') }}",
+          "summary": "={{ $fromAI('title_of_event') }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.2,
+      "position": [
+        2260,
+        780
+      ],
+      "id": "1df5f092-c937-4d6b-82f4-c7c555504aa0",
+      "name": "Create Event",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "FUWYjM8f9HFJ8YzM",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "limit": 100,
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        2600,
+        780
+      ],
+      "id": "87d44d98-01a0-4f12-96ab-022985267a08",
+      "name": "Get Emails",
+      "webhookId": "0cd4ec30-586d-4180-8c64-3499f7091e73",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "uVAIHFxNy2Qf0zKS",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "subject": "={{ $fromAI('draft_subject') }} ",
+        "emailType": "html",
+        "message": "=<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Email Template</title>\n    <style>\n        body {\n            font-family: Arial, sans-serif;\n            background-color: #f9f9f9;\n            margin: 0;\n            padding: 0;\n        }\n        .email-container {\n            max-width: 600px;\n            margin: 20px auto;\n            background-color: #ffffff;\n            border: 1px solid #ddd;\n            border-radius: 8px;\n            overflow: hidden;\n        }\n        .header {\n            background-color: #4CAF50;\n            color: white;\n            text-align: center;\n            padding: 20px 10px;\n        }\n        .body {\n            padding: 20px;\n            color: #333;\n            line-height: 1.6;\n        }\n        .footer {\n            text-align: center;\n            background-color: #f1f1f1;\n            color: #666;\n            padding: 15px 10px;\n            font-size: 0.9em;\n        }\n        .footer a {\n            color: #4CAF50;\n            text-decoration: none;\n        }\n        .footer a:hover {\n            text-decoration: underline;\n        }\n    </style>\n</head>\n<body>\n    <div class=\"email-container\">\n        <div class=\"header\">\n            <h1>Team Update</h1>\n        </div>\n        <div class=\"body\">\n            {{ $fromAI('draft_reply') }}\n        </div>\n        <div class=\"footer\">\n            <p>&copy; 2024 TylerAI</p>\n            <p><a href=\"https://www.yourcompany.com\">Visit our website</a></p>\n        </div>\n    </div>\n</body>\n</html>",
+        "options": {
+          "sendTo": "={{ $fromAI('list_of_employee_emails', 'a list of employee emails') }}"
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        2740,
+        780
+      ],
+      "id": "4fd7958b-6f70-406b-b780-2033a03e9799",
+      "name": "Gmail",
+      "webhookId": "3fb93d58-1de1-4e08-8ae8-d455ef71e65a",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "uVAIHFxNy2Qf0zKS",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4305b6c4-d39a-4fdc-ab24-6d3c19c346c7",
+              "name": "text",
+              "value": "={{ $json.message.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1740,
+        480
+      ],
+      "id": "49af01b6-b92a-4371-9de2-d4a28ee4b1eb",
+      "name": "Set Text Field to Match OpenAI Text Field"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4fef4e76-b72d-47ec-8f56-9b04a7a54cd2",
+              "name": "message.text",
+              "value": "={{ $json?.message?.text || \"\" }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1140,
+        400
+      ],
+      "id": "125ba947-cf00-4f62-ad54-f57907465ef6",
+      "name": "Make the text from Telegram optional or Empty"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f6eb98b9-9aec-498f-9140-5d0c2e802425",
+              "leftValue": "={{ $json.message.text }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1320,
+        400
+      ],
+      "id": "22286fa0-ed4c-478e-96e2-626d3fa87375",
+      "name": "is Voice or Text?"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "calendar": {
+          "__rl": true,
+          "value": "tylerreedytlearning@gmail.com",
+          "mode": "list",
+          "cachedResultName": "tylerreedytlearning@gmail.com"
+        },
+        "eventId": "={{ $fromAI('event_id') }}",
+        "updateFields": {
+          "description": "={{ $fromAI('description') }}",
+          "end": "={{ $fromAI('new_end_time') }}",
+          "start": "={{ $fromAI('new_start_time') }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        1940,
+        780
+      ],
+      "id": "bd974b51-84ca-4b91-a4e7-2c3dfdf06da0",
+      "name": "Update Event",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "FUWYjM8f9HFJ8YzM",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "calendar": {
+          "__rl": true,
+          "value": "tylerreedytlearning@gmail.com",
+          "mode": "list",
+          "cachedResultName": "tylerreedytlearning@gmail.com"
+        },
+        "eventId": "={{ $fromAI('event_id') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        2420,
+        780
+      ],
+      "id": "ffd2949e-3384-4ad5-8489-e4ae102f7ed2",
+      "name": "Delete Event",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "FUWYjM8f9HFJ8YzM",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "tylerreedytlearning@gmail.com",
+          "mode": "list",
+          "cachedResultName": "tylerreedytlearning@gmail.com"
+        },
+        "timeMin": "={{ $fromAI('start_date') }}",
+        "timeMax": "={{ $fromAI('end_date_to_check') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        2100,
+        780
+      ],
+      "id": "08371328-6318-4642-86d8-222bdd9be5af",
+      "name": "Get Events",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "FUWYjM8f9HFJ8YzM",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendAudio",
+        "chatId": "={{ $('Listen for incoming events').first().json.message.from.id }}",
+        "binaryData": true,
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2680,
+        400
+      ],
+      "id": "83655856-718e-4c42-83c9-e11eea1cbe93",
+      "name": "Send Telegram Voice",
+      "webhookId": "987317eb-2c2b-490b-970c-527e92231f69",
+      "credentials": {
+        "telegramApi": {
+          "id": "4ml5GHmSBn0oCcI2",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "input": "={{ $json.output }}",
+        "voice": "nova",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        2460,
+        400
+      ],
+      "id": "fe1c3d12-e977-450d-84c5-7e361b97ace7",
+      "name": "OpenAI1",
+      "credentials": {
+        "openAiApi": {
+          "id": "marROkDq8FtIIcmK",
+          "name": "OpenAi account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "OpenAI1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Listen for incoming events": {
+      "main": [
+        [
+          {
+            "node": "Make the text from Telegram optional or Empty",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Event": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Emails": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Text Field to Match OpenAI Text Field": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Make the text from Telegram optional or Empty": {
+      "main": [
+        [
+          {
+            "node": "is Voice or Text?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "is Voice or Text?": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Text Field to Match OpenAI Text Field",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Event": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete Event": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Events": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI1": {
+      "main": [
+        [
+          {
+            "node": "Send Telegram Voice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "timezone": "America/New_York",
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionOrder": "v0"
+  },
+  "versionId": "a29bc7b7-7309-4d6d-8a28-1bdd7a3e6294",
+  "meta": {
+    "templateId": "2592",
+    "templateCredsSetupCompleted": true,
+    "instanceId": "109e32fa950741cab379b6d825599a810f59f364361f13a3a9b822a29abb36cd"
+  },
+  "id": "BACuCEKWc3JPu9zq",
+  "tags": [
+    {
+      "createdAt": "2024-12-23T16:29:30.855Z",
+      "updatedAt": "2024-12-23T16:29:30.855Z",
+      "id": "tlEKZt5xZyOsvZWA",
+      "name": "telegram"
+    }
+  ]
+}

@@ -1,0 +1,210 @@
+{
+  "name": "Project 1 - n8n Cloud / RSS Feed Trigger",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.rssFeedReadTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "9f2b4edb-84f8-4c83-b7ff-fe432511aed8",
+      "name": "RSS Feed Trigger"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "52ac508f-9ee6-4d46-afcd-1e180d7d8ef5",
+              "name": "creator",
+              "value": "={{ $json.creator }}",
+              "type": "string"
+            },
+            {
+              "id": "36f917fb-4236-4b18-aac4-15f4ec1c5a67",
+              "name": "title",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "f7999fcb-007d-472c-97b3-dca7956c10f6",
+              "name": "link",
+              "value": "={{ $json.link }}",
+              "type": "string"
+            },
+            {
+              "id": "9c48398f-0634-4a87-a7d5-ccaee51dc742",
+              "name": "content",
+              "value": "={{ $json['content:encoded'] }}",
+              "type": "string"
+            },
+            {
+              "id": "a43258eb-400b-46dd-b02d-a3026b22bb19",
+              "name": "date_added",
+              "value": "={{ $now }}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {
+          "ignoreConversionErrors": true
+        }
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        0
+      ],
+      "id": "af890849-05d2-4ab7-80cb-9f5ef6e53764",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1BF5lajEqwLhm_-vo4X1krZZXKVmycfXyMr7xNZUFX_8",
+          "mode": "list",
+          "cachedResultName": "RSS Feed",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1BF5lajEqwLhm_-vo4X1krZZXKVmycfXyMr7xNZUFX_8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "feed",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1BF5lajEqwLhm_-vo4X1krZZXKVmycfXyMr7xNZUFX_8/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {
+            "creator": "={{ $json.creator }}",
+            "title": "={{ $json.title }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "creator",
+              "displayName": "creator",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "link",
+              "displayName": "link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "content",
+              "displayName": "content",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "date_added",
+              "displayName": "date_added",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "contentszzzzz",
+              "displayName": "contentszzzzz",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        440,
+        0
+      ],
+      "id": "69f8d774-a969-4452-89de-bd73b99ddb9c",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "9Z8medg9wepTxTBx",
+          "name": "Google Sheets account 3"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "RSS Feed Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "bcb1c235-6d3b-47cb-83b4-e7e71572b7c8",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "109e32fa950741cab379b6d825599a810f59f364361f13a3a9b822a29abb36cd"
+  },
+  "id": "HSLG4sbvncpvLPFR",
+  "tags": []
+}

@@ -1,0 +1,117 @@
+{
+  "name": "Project 10 - MCP Chatbot Client",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        220,
+        0
+      ],
+      "id": "dcd4eea4-4f3b-4d70-9e31-a748084dcbaf",
+      "name": "When chat message received",
+      "webhookId": "f34e04d9-9d28-4f6e-8b43-4070a476d938"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        440,
+        0
+      ],
+      "id": "f4a66916-f844-4ffe-b947-91cf40d73967",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "claude-3-7-sonnet-20250219",
+          "cachedResultName": "Claude 3.7 Sonnet"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        360,
+        200
+      ],
+      "id": "53fc9402-8195-4303-b216-9f6a4698eded",
+      "name": "Anthropic Chat Model",
+      "credentials": {
+        "anthropicApi": {
+          "id": "Garn2SGcZTxlBVhx",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sseEndpoint": "https://tylerreedytlearning.app.n8n.cloud/mcp/tyleryt/sse"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1,
+      "position": [
+        720,
+        220
+      ],
+      "id": "6855863a-43cf-4efc-a204-af423c7810ef",
+      "name": "MCP Client"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP Client": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "c9ce845d-ac5b-437e-a6cc-cb5187b8ccbb",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "109e32fa950741cab379b6d825599a810f59f364361f13a3a9b822a29abb36cd"
+  },
+  "id": "y5cZBeMT2eeWlEwV",
+  "tags": []
+}

@@ -1,0 +1,455 @@
+{
+  "name": "Project 3 - Basic LLM Chain",
+  "nodes": [
+    {
+      "parameters": {
+        "formId": "kol4xQI5"
+      },
+      "type": "n8n-nodes-base.typeformTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -160,
+        0
+      ],
+      "id": "927b76f0-7039-41be-afc7-ee5fb8053f7e",
+      "name": "Typeform Trigger",
+      "webhookId": "357522aa-f16e-4914-bd52-eae1742dc9ca",
+      "credentials": {
+        "typeformApi": {
+          "id": "resy8HlDcOr1Qxsl",
+          "name": "Typeform account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Typeform Trigger').item.json.Email }}",
+        "subject": "Thank you!!",
+        "message": "={{ $json.text }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        440,
+        0
+      ],
+      "id": "d4c0f3ff-685c-433b-8121-027c3437246e",
+      "name": "Gmail",
+      "webhookId": "eb591523-7fda-4d20-a4cd-c716ef9a8b4f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "Q3LSD64z5q8adBIV",
+          "name": "Gmail account 2"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "0093af91-3ac3-4159-b1de-4d87cf460f6f",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        660,
+        0
+      ],
+      "id": "96ebb2a8-e087-4032-8483-2fa097e97e50",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1QLtn5OF0zWloCECHvU94MAUmAGOxXQW6j6IFB6Bvqko",
+          "mode": "list",
+          "cachedResultName": "Form Onboarding",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1QLtn5OF0zWloCECHvU94MAUmAGOxXQW6j6IFB6Bvqko/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "responses",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1QLtn5OF0zWloCECHvU94MAUmAGOxXQW6j6IFB6Bvqko/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "first_name": "={{ $('Typeform Trigger').item.json['First name'] }}",
+            "last_name": "={{ $('Typeform Trigger').item.json['Last name'] }}",
+            "phone_number": "={{ $('Typeform Trigger').item.json['Phone number'] }}",
+            "email": "={{ $('Typeform Trigger').item.json.Email }}",
+            "company": "={{ $('Typeform Trigger').item.json.Company }}",
+            "email_sent": "success"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "first_name",
+              "displayName": "first_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "last_name",
+              "displayName": "last_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "phone_number",
+              "displayName": "phone_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "company",
+              "displayName": "company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "email_sent",
+              "displayName": "email_sent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        880,
+        -120
+      ],
+      "id": "b062999a-ae0f-4cdc-a51c-04328ebf0ba2",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "9Z8medg9wepTxTBx",
+          "name": "Google Sheets account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1QLtn5OF0zWloCECHvU94MAUmAGOxXQW6j6IFB6Bvqko",
+          "mode": "list",
+          "cachedResultName": "Form Onboarding",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1QLtn5OF0zWloCECHvU94MAUmAGOxXQW6j6IFB6Bvqko/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "responses",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1QLtn5OF0zWloCECHvU94MAUmAGOxXQW6j6IFB6Bvqko/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "first_name": "={{ $('Typeform Trigger').item.json['First name'] }}",
+            "last_name": "={{ $('Typeform Trigger').item.json['Last name'] }}",
+            "phone_number": "={{ $('Typeform Trigger').item.json['Phone number'] }}",
+            "email": "={{ $('Typeform Trigger').item.json.Email }}",
+            "company": "={{ $('Typeform Trigger').item.json.Company }}",
+            "email_sent": "=failure: {{ $json.error }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "first_name",
+              "displayName": "first_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "last_name",
+              "displayName": "last_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "phone_number",
+              "displayName": "phone_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "company",
+              "displayName": "company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "email_sent",
+              "displayName": "email_sent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        880,
+        100
+      ],
+      "id": "47c6d2e7-bc0c-49e3-b9a4-19fbb88e0fb3",
+      "name": "Google Sheets1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "9Z8medg9wepTxTBx",
+          "name": "Google Sheets account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=I want you to send a response email from a typeform that was filled out.  Here is the information:\n\n{{ $json['First name'] }}\n{{ $json['Last name'] }}\n{{ $json['Phone number'] }}\n{{ $json.Email }}\n{{ $json.Company }}\n\nMake sure it is professional, concise and also in HTML format.  Remove the ```html and ``` at the beginning and end.  Just the HTML only."
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.6,
+      "position": [
+        60,
+        0
+      ],
+      "id": "94aab15d-77f2-404b-b369-3288bc1dfa03",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "claude-3-7-sonnet-20250219",
+          "cachedResultName": "Claude 3.7 Sonnet"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        20,
+        200
+      ],
+      "id": "a968402a-6600-4f77-a42e-7a92f4b056d7",
+      "name": "Anthropic Chat Model",
+      "credentials": {
+        "anthropicApi": {
+          "id": "Garn2SGcZTxlBVhx",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Logging\n**If successful, then add to sheets**\n**If unsuccessful, then add error to sheets**",
+        "height": 520,
+        "width": 540
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        600,
+        -220
+      ],
+      "id": "617cff75-c5aa-4848-9d60-f44bd6b5fc3f",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Basic LLM Chaining\n- generates email body to send through gmail",
+        "height": 580,
+        "width": 380,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -220
+      ],
+      "id": "62979a8d-2cf0-4f0a-88f0-50520f9883a6",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Basic LLM Chaining with Gmail\n\n1. Waits for typeform submission\n2. Creates body of email with basic llm chain\n3. Sends the Email\n4. Logs it to sheets",
+        "height": 220,
+        "width": 440,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -660,
+        -220
+      ],
+      "id": "0de5029d-01bf-44c6-bdb1-f360f4ad2ef1",
+      "name": "Sticky Note2"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Typeform Trigger": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Google Sheets1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "638ba3af-bbb3-4330-b7c5-b9b9c9ab5f71",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "109e32fa950741cab379b6d825599a810f59f364361f13a3a9b822a29abb36cd"
+  },
+  "id": "fw7NwFoQjBOPbjec",
+  "tags": []
+}

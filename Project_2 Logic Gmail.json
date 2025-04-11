@@ -1,0 +1,379 @@
+{
+  "name": "Project 2 - Logic / Gmail",
+  "nodes": [
+    {
+      "parameters": {
+        "formId": "kol4xQI5"
+      },
+      "type": "n8n-nodes-base.typeformTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "51dc90ef-f0ce-4893-aad8-3855a5b4d4c5",
+      "name": "Typeform Trigger",
+      "webhookId": "5979c9b4-ce38-40f8-8bd4-2def272ad78c",
+      "credentials": {
+        "typeformApi": {
+          "id": "resy8HlDcOr1Qxsl",
+          "name": "Typeform account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6e65437b-9eb5-401c-823a-52002b3d4c78",
+              "name": "body",
+              "value": "=Hello {{ $json['First name'] }}, thank you for your submission!\n\nWe will be contacting you shortly at {{ $json['Phone number'] }}.\n\nWe are excited to work with {{ $json.Company }}.\n\nSincerely,\n\nACME",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        0
+      ],
+      "id": "03ea50a8-62dd-4fa4-a620-91388ef72cd7",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Typeform Trigger').item.json.Email }}",
+        "subject": "Thank you!!",
+        "message": "={{ $json.body }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        440,
+        0
+      ],
+      "id": "172e4df1-d031-4487-96a8-a265e9cc4366",
+      "name": "Gmail",
+      "webhookId": "67ada87b-32ff-4511-b7c0-90c9112e9f3d",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "Q3LSD64z5q8adBIV",
+          "name": "Gmail account 2"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "0093af91-3ac3-4159-b1de-4d87cf460f6f",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        660,
+        0
+      ],
+      "id": "f7b43efd-8cc8-4438-90cc-a1ecb0c19819",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1QLtn5OF0zWloCECHvU94MAUmAGOxXQW6j6IFB6Bvqko",
+          "mode": "list",
+          "cachedResultName": "Form Onboarding",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1QLtn5OF0zWloCECHvU94MAUmAGOxXQW6j6IFB6Bvqko/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "responses",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1QLtn5OF0zWloCECHvU94MAUmAGOxXQW6j6IFB6Bvqko/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "first_name": "={{ $('Typeform Trigger').item.json['First name'] }}",
+            "last_name": "={{ $('Typeform Trigger').item.json['Last name'] }}",
+            "phone_number": "={{ $('Typeform Trigger').item.json['Phone number'] }}",
+            "email": "={{ $('Typeform Trigger').item.json.Email }}",
+            "company": "={{ $('Typeform Trigger').item.json.Company }}",
+            "email_sent": "success"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "first_name",
+              "displayName": "first_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "last_name",
+              "displayName": "last_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "phone_number",
+              "displayName": "phone_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "company",
+              "displayName": "company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "email_sent",
+              "displayName": "email_sent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        880,
+        -120
+      ],
+      "id": "90936618-14ea-46b6-931b-fcba89f6776f",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "9Z8medg9wepTxTBx",
+          "name": "Google Sheets account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1QLtn5OF0zWloCECHvU94MAUmAGOxXQW6j6IFB6Bvqko",
+          "mode": "list",
+          "cachedResultName": "Form Onboarding",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1QLtn5OF0zWloCECHvU94MAUmAGOxXQW6j6IFB6Bvqko/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "responses",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1QLtn5OF0zWloCECHvU94MAUmAGOxXQW6j6IFB6Bvqko/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "first_name": "={{ $('Typeform Trigger').item.json['First name'] }}",
+            "last_name": "={{ $('Typeform Trigger').item.json['Last name'] }}",
+            "phone_number": "={{ $('Typeform Trigger').item.json['Phone number'] }}",
+            "email": "={{ $('Typeform Trigger').item.json.Email }}",
+            "company": "={{ $('Typeform Trigger').item.json.Company }}",
+            "email_sent": "=failure: {{ $json.error }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "first_name",
+              "displayName": "first_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "last_name",
+              "displayName": "last_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "phone_number",
+              "displayName": "phone_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "company",
+              "displayName": "company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "email_sent",
+              "displayName": "email_sent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        880,
+        100
+      ],
+      "id": "4a1fe133-98ec-4722-9009-0b2b5efcbae2",
+      "name": "Google Sheets1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "9Z8medg9wepTxTBx",
+          "name": "Google Sheets account 3"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Typeform Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Google Sheets1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "af834af3-20fd-4924-b59e-4878a941a388",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "109e32fa950741cab379b6d825599a810f59f364361f13a3a9b822a29abb36cd"
+  },
+  "id": "7T5AKj5AkJySY77j",
+  "tags": []
+}

@@ -1,0 +1,13 @@
+{
+    "mcpServers": {
+      "n8n": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "supergateway",
+          "--sse",
+          "https://tylerreedytlearning.app.n8n.cloud/mcp/tyleryt/sse"
+        ]
+      }
+    }
+  }

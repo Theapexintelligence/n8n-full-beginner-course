@@ -1,0 +1,99 @@
+{
+  "name": "Project 10 - MCP Servers",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "tyleryt"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -80
+      ],
+      "id": "2629624b-5edd-4d6a-a388-f3566704b124",
+      "name": "MCP Server Trigger",
+      "webhookId": "cbd810b3-a767-40f7-bfa1-c369f76a7409"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolCalculator",
+      "typeVersion": 1,
+      "position": [
+        300,
+        120
+      ],
+      "id": "c5c35a25-e426-422a-9f95-b65657de62fd",
+      "name": "Calculator"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1BF5lajEqwLhm_-vo4X1krZZXKVmycfXyMr7xNZUFX_8",
+          "mode": "list",
+          "cachedResultName": "RSS Feed",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1BF5lajEqwLhm_-vo4X1krZZXKVmycfXyMr7xNZUFX_8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "feed",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1BF5lajEqwLhm_-vo4X1krZZXKVmycfXyMr7xNZUFX_8/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.5,
+      "position": [
+        60,
+        120
+      ],
+      "id": "f5cdde74-473c-460b-aefb-9db2d0ff0739",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "sPId9ynzVndHtAYA",
+          "name": "Google Sheets account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Calculator": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "ee3e879e-f0d1-43a2-aad8-684b25800e01",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "109e32fa950741cab379b6d825599a810f59f364361f13a3a9b822a29abb36cd"
+  },
+  "id": "pHkR8wqtTpJlogVy",
+  "tags": []
+}
