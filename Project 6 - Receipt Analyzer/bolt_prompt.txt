@@ -1,0 +1,65 @@
+Create a simple web page component with the following elements and functionality:
+
+Title: A clear title like "Receipt Analyzer".
+
+Form:
+
+An Image Upload Input:
+
+Use <input type="file">.
+
+Restrict accepted file types to common image formats (e.g., accept="image/png, image/jpeg, image/webp").
+
+Include a clear label like "Upload Receipt Image:".
+
+Optionally, display a preview of the selected image below the input.
+
+A Submit Button:
+
+Label it "Analyze Receipt".
+
+This button should trigger the image upload process.
+
+The button should be disabled if no image is selected.
+
+Interaction Flow (On Submit Button Click):
+
+Get the selected image file from the input field.
+
+Display a Loading State: Show a message like "Analyzing receipt, please wait..." or a simple spinner while the request is in progress. Hide the results/error area during loading.
+
+Send Image to Backend:
+
+Perform an HTTP POST request.
+
+The target URL is a placeholder: <replace webhook production url here>
+
+Send the image file as part of the request body. Use FormData to package the file (e.g., with a field name like receipt_image).
+
+Handle Backend Response:
+
+On Success (e.g., 2xx status code):
+
+Hide the loading state.
+
+Take the response data returned from the webhook.
+
+Display this data clearly in a designated "Results" section below the form. Use a <pre> tag or similar to nicely format potentially JSON data returned from the backend. Add a heading like "Analysis Results:".
+
+On Failure (e.g., non-2xx status code or network error):
+
+Hide the loading state.
+
+Display a clear error message in a designated "Error" section below the form (e.g., "Error analyzing receipt: [details from error or response]"). Add a heading like "Error:".
+
+Display Areas:
+
+Results Area: A container (initially hidden or empty) to show the successful analysis data from the backend.
+
+Error Area: A container (initially hidden or empty) to show any errors that occurred during the process.
+
+Loading Indicator Area: A place to show the loading message/spinner.
+
+Styling: Use clean, minimal styling. Focus on clarity and usability.
+
+Summary: The goal is a form to upload a receipt image, send it via POST to a webhook https://tylerreedytlearning.app.n8n.cloud/webhook-test/1097ad44-d6ff-4641-8901-c592c60fc222, show a loading state, and then display either the analysis results or an error message returned from the webhook.
