@@ -2,6 +2,13 @@
 
 This repository contains a comprehensive collection of n8n workflow projects, designed to help you learn automation and integration using n8n from beginner to advanced levels.
 
+## Repository Structure
+
+- `/*.json` - n8n workflow files for each project
+- `/Google Sheets/` - CSV templates for Google Sheets integration
+  - `Form Onboarding - responses.csv` - Template for form responses and email tracking
+  - `RSS Feed - feed.csv` - Template for RSS Feed Trigger (1st Project)
+
 ## Course Projects
 
 1. **RSS Feed Trigger** (Project 1)
@@ -32,10 +39,16 @@ This repository contains a comprehensive collection of n8n workflow projects, de
    - Building intelligent chatbots
    - Data persistence and retrieval
 
-6. **Receipt Analyzer Backend** (Project 6)
-   - Document processing
-   - Data extraction from receipts
-   - Backend automation workflows
+6. **Receipt Analyzer** (Project 6)
+   - Frontend:
+     - User interface for receipt submission
+     - Form handling and data collection
+     - Response visualization
+   - Backend:
+     - Document processing workflow
+     - Data extraction from receipts
+     - Backend automation and processing
+     - Integration with frontend components
 
 7. **Social Media Integration** (Project 7)
    - Multi-platform social media automation
@@ -59,19 +72,22 @@ This repository contains a comprehensive collection of n8n workflow projects, de
 1. Clone this repository
 2. Import the workflows into your n8n instance
 3. Configure the necessary credentials and API keys
-4. Follow the project progression from 1 to 10
+4. Import CSV templates from the Google Sheets folder into your Google Sheets
+5. Follow the project progression from 1 to 10
 
 ## Prerequisites
 
 - Basic understanding of APIs and automation
 - n8n instance (cloud or self-hosted)
 - Required API keys and credentials for various services
+- Google Workspace account for Sheets integration
 
 ## Notes
 
 - Each project builds upon the knowledge from previous ones
 - Projects are designed to showcase different aspects of n8n
 - Credentials and sensitive data should be properly configured in your n8n instance
+- CSV templates are provided for standardized data structure
 
 ## Helpful Resources
 
